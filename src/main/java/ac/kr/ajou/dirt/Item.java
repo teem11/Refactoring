@@ -1,5 +1,8 @@
 package ac.kr.ajou.dirt;
 
+import lombok.Data;
+
+@Data
 public class Item {
 
     public String name;
@@ -7,6 +10,7 @@ public class Item {
     public int sellIn;
 
     public int quality;
+
 
     public Item(String name, int sellIn, int quality) {
         this.name = name;
