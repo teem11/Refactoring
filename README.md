@@ -1,2 +1,19 @@
-# ajou-dirtycode
-Dirty code for refactoring
+# TEAM 11 Homework 
+## Dirty code for refactoring
+### 과정
+#### 1. Test 작성
+##### 테스트는 다음과 같은 과정으로 진행하였습니다.
+ - 이름 매칭 조건, sellIn조건 순으로 testmethod작성, 독립적이지 않은 것과 순차적 실행 조심
+    --------------------------------------------------------------------------
+    A,B,S의 이름이 매칭이 되지 않으며 quality > 0 인 경우 - quality1감소
+    A,B,S의 이름이 매칭되지 않고 quality > 0 이고 sellIn < 0 인 경우 - quality1감소
+    S의 이름이 매칭되지 않는 경우 - sellIn1감소
+    --------------------------------------------------------------------------
+    A나 B의 이름이 매칭되며, quality < 50 인 경우 - quality1증가
+    A의 이름이 매칭되며, sellIn < 0 이며 quality < 50 인 경우 - quality1증가
+    B의 이름이 매칭되며, sellIn < 11 이고 quality < 50 인 경우 - quality1증가
+    B의 이름이 매칭되며, sellIn < 6 이고 quality < 50 인 경우 - quality1증가
+    B의 이름이 매칭되며, sellIn < 0 인 경우 - quality 0으로 초기화
+    ----------------------------------------------
+
+
