@@ -81,7 +81,7 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
     - DirtySample은 lombok을 써야 할 정도로 변수가 많지 않아서 따로 @Data를 달지 않았습니다.
     - 코드의 길이가 길어서 서로 독립적인 부분을 기준으로 3등분 하였습니다. 각각의 부분은 정확히
     어떤 목적으로 작성되었는지 알 수 없어서 이름은 임의로 정했습니다.
-    >> before
+    > before
     ```shell
     public void updateQuality() {
         for (int i = 0; i < items.length; i++) {
@@ -112,7 +112,7 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
                 }
             }
     ```
-    >> after 
+    > after 
     ```shell
     private void modifyQualityFirstStep(Item item) {
         if (!is_Aged_brie(item) && !is_Back_Stage(item)){
@@ -136,7 +136,7 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
     }
     ```
     
-    >> before
+    > before
     ``` shell
     if (items[i].sellIn < 0) {
                 if (!items[i].name.equals("Aged Brie")) {
@@ -157,7 +157,7 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
             }
         }
     ```
-    >> after
+    > after
     ``` shell
     private void modifyQualitySecondStep(Item item) {
         if (!is_Aged_brie(item)) {
@@ -197,12 +197,22 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
     }
     ```
 - 불필요한 if, else 제거
+    - if의 conditional block을 하나로 묶을 수 있는 부분을 수정하였습니다.
+    > before
+    ```shell
+     if (items[i].quality > 0) {
+                if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
+                    items[i].quality = items[i].quality - 1;
+                }
+            }
+    ```
+    >after
+    ```shell
+    if (item.quality > 0 && !is_Sulfuras(item)) {
+            item.quality = item.quality - 1;
+        }
+    ```
 
-> update and install this package first
-```shell
-$ brew update
-$ brew install fvcproductions
-```
 
 
 
