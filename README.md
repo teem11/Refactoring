@@ -198,6 +198,7 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
     ```
 - 불필요한 if, else 제거
     - if의 conditional block을 하나로 묶을 수 있는 부분을 수정하였습니다.
+    - 제거한 if, else는 여러개가 있지만 대개 중복되어서 소개는 한개만 하겠습니다.
     > before
     ```shell
      if (items[i].quality > 0) {
