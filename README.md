@@ -57,7 +57,7 @@ updateQuality_name은B_sellIn1이상_quality는50이상이면_quality그대로_s
 ```shell
 updateQuality_name은S_sellIn상관없이_quality상관없이_quality그대로_sellIn그대로
 ```
-> 1, 2,3 에 해당 
+> 1, 2, 3 에 해당 
 ```shell
 updateQuality_name은이외것_sellIn0미만_quality는0이상이면_quality2감소_quality는최소0_sellIn1감소
 ```
@@ -70,7 +70,11 @@ updateQuality_name은이외것_sellIn0이상_quality는0이상이면_quality1감
 updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_quality그대로_sellIn1감소
 ```
 #### 2. DirtySample 리팩토링
- 
+
+- SRP 점검 
+- **DirtySample은 SRP에 위반되는 내용이 없다고 판단되어 코드의 일부를 다른 Class로 분리하지 않았습니다**
+
+
 > update and install this package first
 ```shell
 $ brew update
