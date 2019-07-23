@@ -72,8 +72,29 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
 #### 2. DirtySample 리팩토링
 
 - SRP 점검 
-    - **DirtySample은 SRP에 위반되는 내용이 없다고 판단되어 코드의 일부를 다른 Class로 분리하지 않았습니다**
+    - DirtySample은 SRP에 위반되는 내용이 없다고 판단되어 코드의 일부를 다른 Class로 분리하지 않았습니다
+- Method는 20라인보다 간결하게
+    - 기존에 method의 이름은 20라인이 넘어가는 것이 없어 수정하지 않았습니다.
+- 중복 코드가 있는지 확인 
+    - 기존의 method는 중복이 되는 부분이 없어 수정하지 않았습니다.
+- 코드의 길이를 줄이자
+    - DirtySample은 lombok을 써야 할 정도로 변수가 많지 않아서 수정하지 않았습니다.
+- 변수명, 메소드명은 길어도 바로 이해 가능하게 
+    - Item의 attribute(name, quality, sellin)는 많지 않고 직관적으로 이해 할 수 있어서 건드리지 않았습니다.
+    - 이름을 확인하는 method를 extract 하였습니다.
+    ```shell
+    private boolean is_Sulfuras(Item item) {
+        return item.name.equals("Sulfuras, Hand of Ragnaros");
+    }
 
+    private boolean is_Back_Stage(Item item) {
+        return item.name.equals("Backstage passes to a TAFKAL80ETC concert");
+    }
+
+    private boolean is_Aged_brie(Item item) {
+        return item.name.equals("Aged Brie");
+    }
+    ```
 
 > update and install this package first
 ```shell
