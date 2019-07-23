@@ -1,77 +1,118 @@
 package ac.kr.ajou.dirt;
 
 class DirtySample {
-    Item[] items;
+    final Item[] items;
 
     public DirtySample(Item[] items) {
         this.items = items;
     }
 
-    public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {
-            modifyQualityFirstStep(items[i]);
-
-            if (!is_Sulfuras(items[i])) {
-                items[i].sellIn = items[i].sellIn - 1;
-            }
-
-            if (items[i].sellIn < 0) {
-                modifyQualitySecondStep(items[i]);
-            }
-        }
-    }
-
-    private void modifyQualityFirstStep(Item item) {
-        if (!is_Aged_brie(item) && !is_Back_Stage(item)){
-            if (item.quality > 0 && !is_Sulfuras(item)) {
-                item.quality = item.quality - 1;
-            }
-        } else {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-
-                if (is_Back_Stage(item)) {
-                    if (item.sellIn < 11 && item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                    if (item.sellIn < 6 && item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
+    public void updateQualityAndSellInOfItems() {
+        for (Item item : items) {
+            switch (item.name) {
+                case "Aged Brie":
+                    updateQualityAndSellInOfItemNameAged_Brie(item);
+                    break;
+                case "Backstage passes to a TAFKAL80ETC concert":
+                    updateQualityAndSellInOfItemNameBackstage_passes_to_a_TAFKAL80ETC_concert(item);
+                    break;
+                case "Sulfuras, Hand of Ragnaros":
+                    //do nothing
+                    break;
+                default:
+                    updateQualityAndSellInOfItemNameOthers(item);
+                    break;
             }
         }
     }
 
-    private void modifyQualitySecondStep(Item item) {
-        if (!is_Aged_brie(item)) {
-            if (!is_Back_Stage(item)) {
-                if (item.quality > 0 && !is_Sulfuras(item)) {
-                    item.quality = item.quality - 1;
-                }
-            } else {
-                item.quality = 0;
-            }
-        } else {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-            }
+    private void updateQualityAndSellInOfItemNameAged_Brie(Item item) {
+        int originalItemQuality = item.quality;
+        int updatedItemQuality = item.quality;
+
+        if(item.quality >= 50){
+            item.sellIn--;
+            return;
         }
+
+        if(item.sellIn <= 0){
+            updatedItemQuality += 2;
+        } else
+            updatedItemQuality += 1;
+
+        item.quality = setMaximumQuality50IfExcessTo50(originalItemQuality, updatedItemQuality);
+        item.sellIn--;
     }
 
-    private boolean is_Sulfuras(Item item) {
-        return item.name.equals("Sulfuras, Hand of Ragnaros");
+    private void updateQualityAndSellInOfItemNameBackstage_passes_to_a_TAFKAL80ETC_concert(Item item) {
+        int originalItemQuality = item.quality;
+        int updatedItemQuality = item.quality;
+        int sellInScope;
+
+        sellInScope = checkSellInScope(item.sellIn);
+        if (sellInScope == 0){
+            item.quality = 0;
+            item.sellIn--;
+            return;
+        }
+        if (item.quality >= 50){
+            item.sellIn--;
+            return;
+        }
+        switch (sellInScope){
+            case 1:
+                updatedItemQuality += 1;
+                break;
+            case 2:
+                updatedItemQuality += 2;
+                break;
+            case 3:
+                updatedItemQuality += 3;
+                break;
+        }
+        item.quality = setMaximumQuality50IfExcessTo50(originalItemQuality, updatedItemQuality);
+        item.sellIn--;
     }
 
-    private boolean is_Back_Stage(Item item) {
-        return item.name.equals("Backstage passes to a TAFKAL80ETC concert");
+    private void updateQualityAndSellInOfItemNameOthers(Item item) {
+        int originalItemQuality = item.quality;
+        int updatedItemQuality = item.quality;
+
+        if(item.quality < 0){
+            item.sellIn--;
+            return;
+        }
+
+        if(item.sellIn < 0)
+            updatedItemQuality -= 2;
+        else
+            updatedItemQuality -= 1;
+
+        item.sellIn--;
+        item.quality = setMaximumQuality0IfExcessTo0(originalItemQuality, updatedItemQuality);
     }
 
-    private boolean is_Aged_brie(Item item) {
-        return item.name.equals("Aged Brie");
+    private int setMaximumQuality50IfExcessTo50(int originalItemQuality, int updatedItemQuality){
+        if (originalItemQuality <= 50 && updatedItemQuality >= 50){
+            return 50;
+        } else
+            return updatedItemQuality;
     }
 
-    private boolean is_Valid_Condition(String name, int sellin, int quality, Item item) {
-        return item.getName().equals(name) && item.getSellIn() < sellin && item.getQuality() < quality;
+    private int checkSellInScope(int sellInScope){
+        if(sellInScope >= 1 && sellInScope < 6)
+            return 3;
+        else if(sellInScope >= 6 && sellInScope < 11)
+            return 2;
+        else if(sellInScope >= 11)
+            return 1;
+        return 0;
     }
 
+    private int setMaximumQuality0IfExcessTo0(int originalItemQuality, int updatedItemQuality){
+        if (originalItemQuality >= 0 && updatedItemQuality <= 0){
+            return 0;
+        } else
+            return updatedItemQuality;
+    }
 }
