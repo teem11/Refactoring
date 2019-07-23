@@ -72,7 +72,7 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
 #### 2. DirtySample 리팩토링
 
 - SRP 점검 
-- **DirtySample은 SRP에 위반되는 내용이 없다고 판단되어 코드의 일부를 다른 Class로 분리하지 않았습니다**
+    - **DirtySample은 SRP에 위반되는 내용이 없다고 판단되어 코드의 일부를 다른 Class로 분리하지 않았습니다**
 
 
 > update and install this package first
