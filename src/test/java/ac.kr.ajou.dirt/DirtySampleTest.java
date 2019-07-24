@@ -1,5 +1,4 @@
 package ac.kr.ajou.dirt;
-
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -19,7 +18,6 @@ public class DirtySampleTest {
     //B의 이름이 매칭되며, sellIn < 6 이고 quality < 50 인 경우 - quality1증가
     //B의 이름이 매칭되며, sellIn < 0 인 경우 - quality 0으로 초기화
     //--------------------------------------------------------------------------
-    //A클리어, B클리어, S클리어, 모두 아닌 경우 클리어
 
     @Test
     public void updateQuality_name은A_sellIn은0이하_quality는50이하면_quality2증가_quality는최대50_sellIn1감소() {
@@ -36,7 +34,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0] + 2));
@@ -64,7 +62,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0] + 1));
@@ -92,7 +90,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0]));
@@ -120,7 +118,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0] + 1));
@@ -148,7 +146,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0] + 2));
@@ -176,7 +174,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0] + 3));
@@ -204,7 +202,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(0));
@@ -232,7 +230,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0]));
@@ -262,7 +260,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0]));
@@ -294,7 +292,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(0));
@@ -322,7 +320,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(0));
@@ -352,7 +350,7 @@ public class DirtySampleTest {
         DirtySample dirtySample = new DirtySample(testitems);
 
         setOriginalValues(originalQuality, originalSellIn, dirtySample);
-        dirtySample.updateQuality();
+        dirtySample.updateQualityAndSellInOfItems();
         setUpdatedValues(updatedQuality, updatedSellIn, dirtySample);
 
         assertThat(updatedQuality[0], is(originalQuality[0]));
