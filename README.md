@@ -134,8 +134,25 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
     ```
     - 메소드명도 기존의 updateQuality보다 sellIn도 변경하는 updateQualityAndSellInOfItems()로 적절히 바꿔줬습니다. 
     
-    - 다수의 메소드에서 중복적으로 사용하는 quality가 증가할 때 50이 넘으면 50으로 고정시키는 동작을 updateQualityAndSellInOfItems()라는 메소드로 묶어서 간단하게 하였습니다.
-
+    - 다수의 메소드에서 중복적으로 사용하는 quality가 증가할 때 50이 넘으면 50으로 고정시키는 동작을 setMaximumQuality50IfExcessTo50()라는 메소드로 묶어서 간단하게 하였습니다.
+    ```shell
+    private int setMaximumQuality50IfExcessTo50(int originalItemQuality, int updatedItemQuality){
+        if (originalItemQuality <= 50 && updatedItemQuality >= 50){
+            return 50;
+        } else
+            return updatedItemQuality;
+    }
+    ```
+    - 다수의 메소드에서 중복적으로 사용하는 quality가 0 미만으로 감소할 때 0을 return하고 아니면 
+    수정된 quality를 return하는 메소드를 만들어서 간단히 하였습니다.
+    ```shell
+        private int setMaximumQuality0IfExcessTo0(int originalItemQuality, int updatedItemQuality){
+        if (originalItemQuality >= 0 && updatedItemQuality <= 0){
+            return 0;
+        } else
+            return updatedItemQuality;
+    }
+    ```
     - SRP 점검 
         - DirtySample은 SRP에 위반되는 내용이 없다고 판단되어 코드의 일부를 다른 Class로 분리하지 않았습니다
     - 변수명, 메소드명은 길어도 바로 이해 가능하게 
