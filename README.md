@@ -3,6 +3,9 @@
 ### 제작 과정 
 #### 1. Test Code 작성
 - DirtyCode Sample을 분석하여 코드의 분기와 조건을 정리하였습니다.
+- sellIn과 quality를 변경하는 구문이 8개가 있었고 이 값들을 변경하는 요인인
+name, sellIn, quality에 따라서 어떻게 sellIn과 quality가 변하는 지를
+모두 따진 12개의 Testcode로 작성했습니다.
 > 테스트 조건
 ```shell
  이름 매칭 조건, sellIn조건 순으로 testmethod작성, 독립적이지 않은 것과 순차적 실행 조심
@@ -71,33 +74,41 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
 ```
 #### 2. DirtySample 리팩토링
 
-- SRP 점검 
-    - DirtySample은 SRP에 위반되는 내용이 없다고 판단되어 코드의 일부를 다른 Class로 분리하지 않았습니다
-- Method는 20라인보다 간결하게
-    - 기존에 method의 이름은 20라인이 넘어가는 것이 없어 수정하지 않았습니다.
-- 중복 코드가 있는지 확인 
-    - 기존의 method는 중복이 되는 부분이 없어 수정하지 않았습니다.
-- 코드의 길이를 줄이자
-    - DirtySample은 lombok을 써야 할 정도로 변수가 많지 않아서 따로 @Data를 달지 않았습니다.
-    - 코드의 길이가 길어서 서로 독립적인 부분을 기준으로 3등분 하였습니다. 각각의 부분은 정확히
-    어떤 목적으로 작성되었는지 알 수 없어서 이름은 임의로 정했습니다.
+- 리팩토링 주요 기준
+    - 변하지 않고, 독립적인 조건이 되는 name에 따라서 동작하도록 switch문을 이용하고 메소드를 나누었습니다.
+    > main
+    ```shell
+        public void updateQualityAndSellInOfItems() {
+        for (Item item : items) {
+            switch (item.name) {
+                case "Aged Brie":
+                    updateQualityAndSellInOfItemNameAged_Brie(item);
+                    break;
+                case "Backstage passes to a TAFKAL80ETC concert":
+                    updateQualityAndSellInOfItemNameBackstage_passes_to_a_TAFKAL80ETC_concert(item);
+                    break;
+                case "Sulfuras, Hand of Ragnaros":
+                    //do nothing
+                    break;
+                default:
+                    updateQualityAndSellInOfItemNameOthers(item);
+                    break;
+            }
+        }
+    }
+    ```
+    - 각각의 메소드에서 sellIn과 quality의 조건에 따라 단순히 순차적으로 코드를 읽으며 결과를 산출할 수 있도록 testcode를 작성했습니다.
+    - nesting하는 if문을 작성하지 않고 단순히 작성하여 가독성이 좋게 작성했습니다.
+        - 아래의 메소드들은 모두 if else 구문을 중첩하여 코드를 작성하지 않기 위해 item.name을 기준으로 만들었습니다.
+        ```shell
+        private void updateQualityAndSellInOfItemNameAged_Brie(Item item) 
+        private void updateQualityAndSellInOfItemNameBackstage_passes_to_a_TAFKAL80ETC_concert(Item item) 
+        private void updateQualityAndSellInOfItemNameOthers(Item item) 
+        ```
+    - 중간에 checkSellInScope()처럼 단순 조건때문에 메소드가 길어지는 경우 따로 메소드를 뺐습니다. 
     > before
     ```shell
-    public void updateQuality() {
-        for (int i = 0; i < items.length; i++) {
-            if (!items[i].name.equals("Aged Brie")
-                    && !items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                if (items[i].quality > 0) {
-                    if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                        items[i].quality = items[i].quality - 1;
-                    }
-                }
-            } else {
-                if (items[i].quality < 50) {
-                    items[i].quality = items[i].quality + 1;
-
-                    if (items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].sellIn < 11) {
+     if (items[i].sellIn < 11) {
                             if (items[i].quality < 50) {
                                 items[i].quality = items[i].quality + 1;
                             }
@@ -108,110 +119,34 @@ updateQuality_name은이외것_sellIn상관없이_quality는0미만이면_qualit
                                 items[i].quality = items[i].quality + 1;
                             }
                         }
-                    }
-                }
-            }
-    ```
-    > after 
-    ```shell
-    private void modifyQualityFirstStep(Item item) {
-        if (!is_Aged_brie(item) && !is_Back_Stage(item)){
-            if (item.quality > 0 && !is_Sulfuras(item)) {
-                item.quality = item.quality - 1;
-            }
-        } else {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-
-                if (is_Back_Stage(item)) {
-                    if (item.sellIn < 11 && item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                    if (item.sellIn < 6 && item.quality < 50) {
-                        item.quality = item.quality + 1;
-                    }
-                }
-            }
-        }
-    }
-    ```
-    
-    > before
-    ``` shell
-    if (items[i].sellIn < 0) {
-                if (!items[i].name.equals("Aged Brie")) {
-                    if (!items[i].name.equals("Backstage passes to a TAFKAL80ETC concert")) {
-                        if (items[i].quality > 0) {
-                            if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                                items[i].quality = items[i].quality - 1;
-                            }
-                        }
-                    } else {
-                        items[i].quality = items[i].quality - items[i].quality;
-                    }
-                } else {
-                    if (items[i].quality < 50) {
-                        items[i].quality = items[i].quality + 1;
-                    }
-                }
-            }
-        }
     ```
     > after
     ``` shell
-    private void modifyQualitySecondStep(Item item) {
-        if (!is_Aged_brie(item)) {
-            if (!is_Back_Stage(item)) {
-                if (item.quality > 0 && !is_Sulfuras(item)) {
-                    item.quality = item.quality - 1;
-                }
-            } else {
-                item.quality = 0;
-            }
-        } else {
-            if (item.quality < 50) {
-                item.quality = item.quality + 1;
-            }
-        }
+    private int checkSellInScope(int sellInScope){
+        if(sellInScope >= 1 && sellInScope < 6)
+            return 3;
+        else if(sellInScope >= 6 && sellInScope < 11)
+            return 2;
+        else if(sellInScope >= 11)
+            return 1;
+        return 0;
     }
     ```
+    - 메소드명도 기존의 updateQuality보다 sellIn도 변경하는 updateQualityAndSellInOfItems()로 적절히 바꿔줬습니다. 
     
-- conditional block은 method로 따로 extract
-    - conditional block은 Item의 name을 확인하는 부분만 따로 method로 만들었습니다.
-    - 다른 conditional block은 따로 method로 만드는것보다 그대로 놔두는게 깔끔해서 수정하지 않았습니다.
+    - 다수의 메소드에서 중복적으로 사용하는 quality가 증가할 때 50이 넘으면 50으로 고정시키는 동작을 updateQualityAndSellInOfItems()라는 메소드로 묶어서 간단하게 하였습니다.
 
-- 변수명, 메소드명은 길어도 바로 이해 가능하게 
-    - Item의 attribute(name, quality, sellin)는 많지 않고 직관적으로 이해 할 수 있어서 이름을 따로 수정하지 않았습니다.
-    - Item의 name을 확인하는 method를 extract 하였습니다.
-    ```shell
-    private boolean is_Sulfuras(Item item) {
-        return item.name.equals("Sulfuras, Hand of Ragnaros");
-    }
-
-    private boolean is_Back_Stage(Item item) {
-        return item.name.equals("Backstage passes to a TAFKAL80ETC concert");
-    }
-
-    private boolean is_Aged_brie(Item item) {
-        return item.name.equals("Aged Brie");
-    }
-    ```
-- 불필요한 if, else 제거
-    - if의 conditional block을 하나로 묶을 수 있는 부분을 수정하였습니다.
-    - 제거한 if, else는 여러개가 있지만 대개 중복되어서 소개는 한개만 하겠습니다.
-    > before
-    ```shell
-     if (items[i].quality > 0) {
-                if (!items[i].name.equals("Sulfuras, Hand of Ragnaros")) {
-                    items[i].quality = items[i].quality - 1;
-                }
-            }
-    ```
-    >after
-    ```shell
-    if (item.quality > 0 && !is_Sulfuras(item)) {
-            item.quality = item.quality - 1;
-        }
-    ```
-
+    - SRP 점검 
+        - DirtySample은 SRP에 위반되는 내용이 없다고 판단되어 코드의 일부를 다른 Class로 분리하지 않았습니다
+    - 변수명, 메소드명은 길어도 바로 이해 가능하게 
+        >예시
+        ```shell
+        public void updateQualityAndSellInOfItems() 
+        private void updateQualityAndSellInOfItemNameAged_Brie(Item item) 
+        private void updateQualityAndSellInOfItemNameBackstage_passes_to_a_TAFKAL80ETC_concert(Item item) 
+        private void updateQualityAndSellInOfItemNameOthers(Item item) 
+        private int setMaximumQuality50IfExcessTo50(int originalItemQuality, int updatedItemQuality)
+        private int checkSellInScope(int sellInScope)
+        private int setMaximumQuality0IfExcessTo0(int originalItemQuality, int updatedItemQuality)
+        ```
 
